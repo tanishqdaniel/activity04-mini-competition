@@ -102,20 +102,14 @@ Read these directions first, then work through them.
 2.  In the `competition-files` subfolder, you will be greeted by a new
     `README.md` file.
 3.  Ask questions in class as you are working. Remember that you are
-    working as a team (team roster usernames are posted in the **Week 6
-    (Jun 12-18) Tasks** document on Blackboard) to complete this
-    mini-competition, including providing a two-slide presentation (more
-    details in the `competition-files` subfolder). You will likely need
-    to do some work between of our class meetings, remember that you can
-    use our Teams workspace (linked on Blackboard), and post
-    questions/issues in the **Muddy** channel or send direct messages to
-    your team members. If someone else already posted what you though
-    was muddy, add any clarification to their post and give them a “+ 1”
-    👍. Remember that this space is for conversations as well as posting
-    questions. Read through your peers’ muddy posts and do your best to
-    provide help.
-
-## Attribution
-
-This activity is based on [This is
-Statistics](https://thisisstatistics.org/)’s Fall Data Challenge.
+    working as a team (team roster usernames are posted in Teams to
+    complete this mini-competition, including providing a two-slide
+    presentation (more details in the `competition-files` subfolder).
+    You will likely need to do some work between of our class meetings.
+    Remember that you can use our Teams workspace (linked on
+    Blackboard), and post questions/issues in the **Muddy** channel or
+    send direct messages to your team members. If someone else already
+    posted what you though was muddy, add any clarification to their
+    post and give them a “+ 1” 👍. Remember that this space is for
+    conversations as well as posting questions. Read through your peers’
+    muddy posts and do your best to provide help.

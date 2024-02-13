@@ -9,163 +9,111 @@ In this repository/directory you should see the following items:
 
 ## The “rules”
 
-You and your team have been “hired” by GVSU’s [K-12
-Connect](https://www.gvsu.edu/k12connect/) to assess factors that might
-contribute to students’ academic success. Your primary goal is to
-analyze data from the [Parent and Family Involvement
-(PFI)](https://www.census.gov/programs-surveys/nhes.html) in Education
-Surveys to provide insights on factors impacting K-12 education. More
-specifically, you need to determine the “best” linear regression model
-to provide recommendations to GVSU’s K-12 Connect on the impacts of
-school choice and family engagement in school activities and homework.
-This is a more broad research topic - keep in mind that you are fitting
-linear regression models.
+This is a culminating experience for STA 631’s first learning module:
+Linear Regression. Therefore, you must fit, assess, and interpret a (or
+several) linear regression model(s) to a surprise dataset (revealed
+below).
 
-By **6:00 pm on Monday, June 19** you need to create a Google slide deck
-that only contains a title slide (with only your team member’s names and
-presentation title) and up to five additional slides. At least one
-member from each team will provide a 5-minute maximum presentation of
-these slides. Your slides should minimally include:
+Then, **by the start of our class meeting on Tue, Feb 20** you and your
+team must have created a Google Slide deck tor present your results. At
+least one member from each team will provide a 5-minute maximum
+presentation of these slides. This presentation can only contain three
+total slides:
 
-1.  A reflection of the process your team took to explore and decide on
-    your final model (go beyond stating the steps you took - explain
-    why), and
-2.  Your final model and a description of how “good” it fits the data
-    (you will need to explain how you determined “good-ness”).
+1.  One title slide (with only your team member’s names and presentation
+    title),
+2.  One slide summarizing your team’s insight(s) to the research
+    question, and
+3.  One slide that summarizes your team’s modeling process.
 
-Instead of asking questions after each presentation, we will hopefully
-have time at the end to have a closing conversation. Also, to help
-create slides quickly (so you can focus on the modeling task), we will
-use Google Slides instead of creating [slides in
-RMarkdown](https://rmarkdown.rstudio.com/lesson-11.html).
+I may ask clarifying questions at the end of each presentation and we
+will hopefully have time at the end to have a closing conversation. To
+assist in creating slides quickly (so you can focus on the modeling
+task), we will use Google Slides instead of creating [slides in
+RMarkdown](https://rmarkdown.rstudio.com/lesson-11.html). Upload your
+slides to the appropriate Google folder linked below before the start of
+our class meeting:
 
-Upload your slides to this Google folder by the deadline:
-<https://drive.google.com/drive/folders/1kgG_XZd0v8jB2vQueaAwKlt3Ns47HCeI?usp=sharing>
+- [Section 01 (4 - 5:15
+  pm)](https://drive.google.com/drive/folders/1jraxLZkPZwV1CndX1UI3iQG95KrcTJoS?usp=sharing)
+- [Section 02 (2:30 - 3:45
+  pm)](https://drive.google.com/drive/folders/1GZp6xS7JY8TXNv9WCv-zGEF7r-vKUscM?usp=sharing)
 
-Presentation order will be randomly determined around 4:31 pm and edits
-to your slides will not be allowed.
+Presentation order will be randomly determined at the start of class and
+edits to your slides will not be allowed.
 
 While this is a friendly competition, the main purpose is to share your
 ideas/process and learn from your peers and their ideas/process. I
 (Bradford) will determine the “best” group based *only* on your
 presentation by assessing each of the following categories on a
-“missing/attempted/sufficient”-scale (or 0/0.5/1 point-scale; I will be
+“missing/attempted/sufficient”-scale (or 0/0.5/1 point-scale). I will be
 very [stingy](https://www.merriam-webster.com/dictionary/stingy) with
-awarding “1”s except for the last category):
+awarding “1”s except for the last category.
 
-- Clarity of your presentation,
-- Soundness of your approach,
-- Aesthetically pleasing presentation, and
-- Maximum of 5-minutes and five slides + title (only 0 or 1 possible).
+- Clarity of your presentation (Did you seem prepared and have a plan of
+  what you were going to say?),
+- Soundness of your approach (Does the direction your team went make
+  sense based on what we have covered in class?),
+- Aesthetically pleasing presentation (Did you do something beyond the
+  default output to make your presentation easy for your audience to
+  view your work?), and
+- Maximum of 5-minutes and title + two slides (only 0 or 1 possible).
 
 The best group based on these categories will receive a prize/gift.
 
 ### Data
 
-GVSU’s K-12 Connect obtained data from the Parent and Family Involvement
-(PFI) in Education dataset that is collected by the US Census Bureau for
-the Department of Education. You are provided with two years worth of
-data: 2016 and 2019. Note that each year is a separate tab in the data
-file.
+The data come from Torgo & Moniz (2018) and contain many rows of news
+items and their respective social feedback from Facebook, Google+, and
+LinkedIn. The data were collected between November 2015 and July 2015
+over four topics: economy, Microsoft, Obama, and Palestine. Your tasks
+is to create a linear model that best predicts the sentiment of the
+sentiment score for a news items’ headline.
 
-You can view, download, or upload using
-[`{googlesheets4}`](https://googlesheets4.tidyverse.org/) from this url:
+- If you are working on the posit Workbench, you can copy the dataset
+  and data dictionary from `SharedProjects\STA631\mini-competition01` to
+  your cloned RStudio Project. Or, you can download the items from the
+  “working on your own computer” item below and then upload to your
+  RStudio Project.
+- If you are working on your own computer, you can download the dataset
+  and data dictionary from this [Google
+  Folder](https://drive.google.com/drive/folders/1lynSAS0nInotA1XLwIyfU3iqL6nqEYlM?usp=drive_link)
 
-<https://docs.google.com/spreadsheets/d/1FbcKFJ6K0f5qAUOm5PGKxsR1f0Vw0CcG/edit#gid=1836780098>
+This is a relatively large data file and I do not recommend that you
+upload this csv to your GitHub repository. If you set up your RStudio
+project so that your csv file is at the following location, this should
+be automatically handled for you:
 
-This is a relatively large data file and I encourage you to use the
-[Parent and Family Involvement
-(PFI)](https://www.census.gov/programs-surveys/nhes.html) resource page
-to answer questions about variables. You will likely need to do some
-digging.
+`activity04-mini-competition/competition-files/data/news.csv`
 
-As this might be your first experience using academic data, here are
-some examples. Note that the following is copied from This is
-Statistic’s Fall Data Challenge announcement page. I am not providing
-you a direct link because students’ presentations are included and I do
-not want you to feel tempted to simply copy these. Also, their research
-task is slightly different than yours - you must use a specific
-statistical method while they did not need to. Happy to provide you with
-a direct link after the competition.
+If you have placed your file in a different location, edit the
+`activity04-mini-competition/.gitignore` file to reflect this different
+location.
 
-### In the News
+If you have questions, ask.
 
-Today’s students will lead the future, so it’s no wonder the question of
-how to advance their success is a popular topic in media coverage. With
-the recent years of remote and hybrid learning, and many returning to
-in-person classrooms, interest in the topic has surged.
+#### Citation
 
-Here are some recent headlines that highlight the status of familial
-involvement in their children’s K-12 education:
-
-K-12 Dive: [Parents encouraged to talk to schools about students’ math
-progress](https://www.k12dive.com/news/parents-encouraged-to-talk-to-schools-about-students-math-progress/629353/)
-
-The NWEA research organization found that student achievement in
-mathematics for the 2021-2022 school year has significantly declined
-since the pandemic. While schools explore different learning recovery
-opportunities to boost academic achievement in K-12 students, one
-campaign recommends the involvement of parents and guardians to help
-practice their math skills with their children. This article explores
-how parents can aid the improvement of their children’s student success.
-
-Public School Review: [Parental Involvement is Key to Student
-Success](https://www.publicschoolreview.com/blog/parental-involvement-is-key-to-student-success)
-
-Research has shown that reading at home can improve children’s reading
-skills. This article shares how parental and guardian involvement in
-their children’s K-12 education could have a positive impact on a
-child’s academic performance and boost the morale of their teachers.
-
-The 74: [The Biggest Blind Spot in Education: Parents’ Role in Their
-Children’s
-Learning](https://www.the74million.org/article/the-biggest-blind-spot-in-education-parents-role-in-their-childrens-learning/)
-
-Family members can have a larger impact on a student’s public school
-academic performance than teachers, according to this analysis. The 2020
-national test results revealed the pandemic had a significant effect on
-student education, leading to an overall decline in test scores in the
-past decade. This article explores a connection to family involvement
-for student performance.
-
-### Tools & Research
-
-For the 2022 Fall Data Challenge, students will apply their statistical
-skills to analyze real-world K-12 educational experience data and
-provide recommendations and insights supported by their analysis.
-
-In addition to the provided PFI dataset, students have the option to
-utilize additional datasets on the topic to inform their analysis. Here
-are some examples of tools and resources that explore the topic from
-different perspectives.
-
-[NAEP Data Explorers](https://www.nationsreportcard.gov/ndecore/landing)
-
-This dataset tool from the National Assessment of Educational Progress
-(NAEP) and the National Center for Education Statistics provides results
-and factors related to student education from The Nation’s Report Card
-assessments throughout the years.
-
-[The Urban Institute Data
-Catalog](https://datacatalog.urban.org/search/type/dataset)
-
-This collection of open data contributed by researchers and data
-scientists of the Urban Institute allows individuals access to public
-datasets that explore various societal issues.
+Torgo, L. & Moniz, N. (2018). News Popularity in Multiple Social Media
+Platforms. UCI Machine Learning Repository.
+<https://doi.org/10.24432/C5H029>.
 
 ## Suggestions to get started
 
+- What methods have we explored to assess a model’s “good-ness”? As a
+  group, come up with this list and what each tells us. How will your
+  team ensure you are all working with the same training dataset? Note
+  that setting a seed one different computers does not produce the same
+  random sample for each computer (but will within one computer). In
+  [Additional Methods](#additional-methods) below, I provide some
+  descriptive (i.e., not statistical inference focused) methods to check
+  for “good-ness”.
 - Make appropriate exploratory graphs and numerical summary tables for
   each variable and pairs of variables. Note that there are some
   qualitative variables in the dataset. Also, do you need to consider
   any potential interaction terms or polynomial terms?
 - Explore if you need to do anything to ensure the reference groups
   listed in the variable description table.
-- What methods have we explored to assess a model’s “good-ness”? As a
-  group, come up with this list and what each tells us. In [Additional
-  Methods](#additional-methods) below, I provide some further
-  descriptive (i.e., not statistical inference focused) methods to check
-  for “good-ness”.
 - Fit your candidate models.
 - Assess which of your candidates is “best”.
 
