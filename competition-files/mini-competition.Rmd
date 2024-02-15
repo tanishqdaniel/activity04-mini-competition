@@ -16,6 +16,145 @@ library(skimr)
 ```
 
 ```{r load data}
-data <- read_csv("~/competition-files/data/comp_train_data.csv")
+train_data <- read_csv("~/STA631/Activities/activity04-mini-competition/competition-files/data/comp_train_data.csv")
 ```
+
+```{r}
+skim(train_data)
+```
+
+```{r}
+train_data %>%
+  select(-Title,-Headline,-Source,-PublishDate) %>%
+  ggpairs()
+```
+
+
+The only extremely high correlation is between GooglePlus and Facebook. This makes sense (along with the other highest correlations) because they would seem to correspond to some kind of underlying popularity for the news item itself. 
+
+```{r}
+#distribution of our variables
+ggplot(train_data, aes(x = SentimentTitle)) +
+  geom_histogram(binwidth = .2, fill = "orange", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of SentimentTitle",
+       x = "Sentimenttitle",
+       y = "Frequency")
+
+ggplot(train_data, aes(x = Facebook)) +
+  geom_histogram(binwidth = 1000, fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of Facebook score",
+       x = "Facebook",
+       y = "Frequency")
+
+ggplot(train_data, aes(x = GooglePlus)) +
+  geom_histogram(binwidth = 100, fill = "red", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of GooglePlus score",
+       x = "GooglePlus",
+       y = "Frequency")
+
+ggplot(train_data, aes(x = LinkedIn)) +
+  geom_histogram(binwidth = 1000, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of LinkedIn score",
+       x = "LinkedIn",
+       y = "Frequency")
+```
+
+Based on these results, plus the skim() results above, we have good reason to believe that these scores are right-skewed. To deal with this we'll perform a log transformation on these and then check out their distributions.
+
+SentimentTitle seems normally distributed around 0. 
+
+```{r log-transformation}
+# add natural log transformation to existing dataset
+train_data <- train_data %>%
+  mutate(log_Facebook =  log(Facebook), log_GooglePlus = log(GooglePlus), log_LinkedIn = log(LinkedIn))
+```
+
+
+```{r}
+#testing out our new log transformed quantitiative variables
+ggplot(train_data, aes(x = log_Facebook)) +
+  geom_histogram(binwidth = 1, fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of Facebook score",
+       x = "log_Facebook",
+       y = "Frequency")
+
+ggplot(train_data, aes(x = log_GooglePlus)) +
+  geom_histogram(binwidth = 1, fill = "red", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of log_GooglePlus score",
+       x = "log_GooglePlus",
+       y = "Frequency")
+
+ggplot(train_data, aes(x = log_LinkedIn)) +
+  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of log_LinkedIn score",
+       x = "log_LinkedIn",
+       y = "Frequency")
+```
+
+
+These are better distributions, so we'll keep them. 
+
+Let's look at their box plots:
+
+```{r}
+ggplot(train_data, aes(y = log_Facebook)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Distribution of log_Facebook")
+
+ggplot(train_data, aes(y = log_GooglePlus)) +
+  geom_boxplot(fill = "red") +
+  labs(title = "Distribution of log_GooglePlus")
+
+ggplot(train_data, aes(y = log_LinkedIn)) +
+  geom_boxplot(fill = "blue") +
+  labs(title = "Distribution of log_LinkedIn")
+```
+We can see a significant number of extreme outliers, even after a log transformation. 
+
+Let's see the distribution of our response variable, SentimentHeadline.
+
+```{r response distribution}
+ggplot(train_data, aes(x = SentimentHeadline)) +
+  geom_histogram(binwidth = .1, fill = "purple", color = "black", alpha = 0.7) +
+  labs(title = "Distribution of SentimentHeadline",
+       x = "SentimentHeadline",
+       y = "Frequency")
+
+ggplot(train_data, aes(y = SentimentHeadline)) +
+  geom_boxplot(fill = "purple") +
+  labs(title = "Distribution of SentimentHeadline")
+```
+This seems similar to SentimentTitle, in that it has some outliers but is clearly normally distributed around 0. 
+
+```{r creating model object}
+#create model object
+lm_spec <- linear_reg() %>%
+  set_mode("regression") %>%
+  set_engine("lm")
+
+lm_spec
+
+```
+
+```{r fit model}
+mlr_mod_1 <- lm_spec %>% 
+fit(SentimentHeadline ~ log_Facebook + log_GooglePlus + log_LinkedIn + SentimentTitle, data = train_data)
+
+# model output
+tidy(mlr_mod_1)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
