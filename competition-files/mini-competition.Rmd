@@ -1,8 +1,179 @@
 ---
 title: "Linear Regression Mini-competition"
+author: Tanishq Daniel
 output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages}
+library(tidyverse)
+library(tidymodels)
+library(skimr)
+library(GGally)
+```
+
+```{r read data}
+news <- read_csv("data/news.csv")
+skim(news)
+summary(news)
+```
+
+
+```{r pairs-plot,warning=FALSE}
+news %>% 
+  select(SentimentHeadline,SentimentTitle,Facebook,GooglePlus,LinkedIn) %>% 
+  ggpairs()
+```
+```{r}
+correlation_matrix <- cor(news %>% 
+                            select(SentimentHeadline,SentimentTitle,Facebook,GooglePlus,LinkedIn))
+print(correlation_matrix)
+```
+```{r training and test data}
+training_data <- read_csv("data/comp_train_data.csv")
+testing_data <- read_csv("data/comp_test_data.csv")
+summary(training_data)
+```
+
+
+```{r corelation}
+numeric_data <- training_data[sapply(training_data, is.numeric)]
+
+
+correlation_matrix <- cor(numeric_data)
+
+
+print(correlation_matrix)
+
+```
+```{r non-linearity test}
+plot(training_data$SentimentTitle, training_data$SentimentHeadline, main = "Scatter plot of SentimentTitle vs SentimentHeadline Variable", xlab = "SentimentTitle", ylab = "SentimentHeadline")
+
+plot(training_data$Facebook, training_data$SentimentHeadline, main = "Scatter plot of Facebook vs SentimentHeadline Variable", xlab = "Facebook", ylab = "SentimentHeadline")
+
+plot(training_data$GooglePlus, training_data$SentimentHeadline, main = "Scatter plot of GooglePlus vs SentimentHeadline Variable", xlab = "GooglePlus", ylab = "SentimentHeadline")
+
+plot(training_data$LinkedIn, training_data$SentimentHeadline, main = "Scatter plot of LinkedIn vs SentimentHeadline Variable", xlab = "LinkedIn", ylab = "SentimentHeadline")
+
+#qq plots
+qqnorm(training_data$SentimentHeadline)
+qqline(training_data$SentimentHeadline)
+
+qqnorm(training_data$SentimentTitle)
+qqline(training_data$SentimentTitle)
+
+qqnorm(training_data$Facebook)
+qqline(training_data$Facebook)
+
+qqnorm(training_data$GooglePlus)
+qqline(training_data$GooglePlus)
+
+qqnorm(training_data$LinkedIn)
+qqline(training_data$LinkedIn)
+```
+```{r log-variables}
+
+epsilon <- 1e-10
+
+# Sentiment Title
+
+training_data <- training_data %>%
+  mutate(log_SentimentTitle =  log(SentimentTitle + epsilon))
+
+plot(training_data$log_SentimentTitle, training_data$SentimentHeadline, main = "Scatter plot of log(SentimentTitle) vs SentimentHeadline Variable", xlab = "log(SentimentTitle)", ylab = "SentimentHeadline")
+
+# Facebook
+
+training_data <- training_data %>%
+  mutate(log_Facebook =  log(Facebook + epsilon))
+
+plot(training_data$log_Facebook, training_data$SentimentHeadline, main = "Scatter plot of log(Facebook) vs SentimentHeadline Variable", xlab = "log(Facebook)", ylab = "SentimentHeadline")
+
+# Google Plus
+
+training_data <- training_data %>%
+  mutate(log_GooglePlus =  log(GooglePlus + epsilon))
+
+plot(training_data$log_GooglePlus, training_data$SentimentHeadline, main = "Scatter plot of log(GooglePlus) vs SentimentHeadline Variable", xlab = "log(GooglePlus)", ylab = "SentimentHeadline")
+
+# Linkedin
+
+training_data <- training_data %>%
+  mutate(log_LinkedIn =  log(LinkedIn + epsilon))
+
+plot(training_data$log_LinkedIn, training_data$SentimentHeadline, main = "Scatter plot of log(LinkedIn) vs SentimentHeadline Variable", xlab = "log(LinkedIn)", ylab = "SentimentHeadline")
+
+# qq plot check log 
+qqnorm(training_data$log_Facebook)
+qqline(training_data$log_Facebook)
+
+qqnorm(training_data$log_GooglePlus)
+qqline(training_data$log_GooglePlus)
+
+qqnorm(training_data$log_LinkedIn)
+qqline(training_data$log_LinkedIn)
+```
+
+```{r model1}
+model1 <- lm(SentimentHeadline ~ SentimentTitle + LinkedIn + Facebook + GooglePlus, data = training_data)
+```
+
+```{r model1 test}
+predictions <- predict(model1, newdata = testing_data)
+
+mse_model1 <- mean((testing_data$SentimentHeadline - predictions)^2)
+rmse_model1 <- sqrt(mse_model1)
+rsquared_model1 <- summary(model1)$r.squared
+cat("Mean Squared Error:", mse_model1, "\n")
+cat("Root Mean Squared Error:", rmse_model1, "\n")
+cat("R-squared:", rsquared_model1, "\n")
+```
+
+```{r model2}
+model2 <- lm(SentimentHeadline ~ SentimentTitle + LinkedIn, data = training_data)
+```
+
+```{r model2 test}
+predictions <- predict(model2, newdata = testing_data)
+
+mse_model2 <- mean((testing_data$SentimentHeadline - predictions)^2)
+rmse_model2 <- sqrt(mse_model2)
+rsquared_model2 <- summary(model2)$r.squared
+cat("Mean Squared Error:", mse_model2, "\n")
+cat("Root Mean Squared Error:", rmse_model2, "\n")
+cat("R-squared:", rsquared_model2, "\n")
+```
+
+```{r model3}
+model3 <- lm(SentimentHeadline ~ SentimentTitle, data = training_data)
+```
+
+```{r model3 test}
+predictions <- predict(model3, newdata = testing_data)
+
+mse_model3 <- mean((testing_data$SentimentHeadline - predictions)^2)
+rmse_model3 <- sqrt(mse_model3)
+rsquared_model3 <- summary(model3)$r.squared
+cat("Mean Squared Error:", mse_model3, "\n")
+cat("Root Mean Squared Error:", rmse_model3, "\n")
+cat("R-squared:", rsquared_model3, "\n")
+```
+
+
+```{r model4}
+model4 <- lm(SentimentHeadline ~ SentimentTitle + LinkedIn + Facebook, data = training_data)
+```
+
+```{r model4 test}
+predictions <- predict(model4, newdata = testing_data)
+
+mse_model4 <- mean((testing_data$SentimentHeadline - predictions)^2)
+rmse_model4 <- sqrt(mse_model4)
+rsquared_model4<- summary(model4)$r.squared
+cat("Mean Squared Error:", mse_model4, "\n")
+cat("Root Mean Squared Error:", rmse_model4, "\n")
+cat("R-squared:", rsquared_model4, "\n") 
 ```
