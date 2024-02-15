@@ -4,3 +4,5 @@
 .Ruserdata
 README.Rmd
 competition-files/data/news.csv
+competition-files/data/comp_test_data.csv
+competition-files/data/comp_train_data.csv

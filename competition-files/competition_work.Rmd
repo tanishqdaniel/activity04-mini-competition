@@ -1,0 +1,46 @@
+---
+title: "competition_work"
+output: html_document
+date: "2024-02-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+library(skimr)
+```
+While I did this work in this file, I don't want to run all of this in a .Rmd, the best option would have been a R script that could have been run once and saved. 
+
+```{r}
+#set seed
+set.seed(123)
+#read in data from data folder
+comp_data <- read_csv("data/news.csv")
+#check out variables
+skim(comp_data) 
+#create split object
+comp_data_split <- initial_split(comp_data, prop = .8)
+```
+
+```{r, eval = FALSE}
+#assign these rows to train and test sets
+comp_train_data <- training(comp_data_split)
+comp_test_data <- testing(comp_data_split)
+#write to a csv once again
+write_csv(comp_train_data, "comp_train_data.csv")
+write_csv(comp_test_data, "comp_test_data.csv")
+```
+
+```{r, eval = FALSE}
+#ensure that this is the same as the original when we read it again
+train_data <- read_csv("~/STA631/Activities/activity04-mini-competition/competition-files/comp_train_data.csv")
+#now for test data
+test_data <- read_csv("~/STA631/Activities/activity04-mini-competition/competition-files/comp_test_data.csv")
+```
+
+

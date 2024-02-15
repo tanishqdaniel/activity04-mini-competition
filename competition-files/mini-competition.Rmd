@@ -6,3 +6,16 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+```{r load packages}
+library(tidymodels)
+library(tidyverse)
+library(GGally)
+library(skimr)
+
+```
+
+```{r load data}
+data <- read_csv("~/competition-files/data/comp_train_data.csv")
+```
+
