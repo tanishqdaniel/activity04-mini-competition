@@ -23,11 +23,24 @@ train_data <- read_csv("~/STA631/Activities/activity04-mini-competition/competit
 skim(train_data)
 ```
 
-```{r}
+
+I've noticed that the 0th percentile for the three popularity scores are -1 - this makes me wonder about these observations and if maybe a missing score has been stored as -1. We also have some 0s in these columns. I'm not sure what to do with these but for not we'll replace them with NA. 
+```{r data cleaning and manipulation}
+#check if these columns are 0, if so, replace with NA for later transformation
+train_data <- train_data %>%
+  mutate_at(vars(GooglePlus, Facebook, LinkedIn), ~ ifelse(. == 0, NA, .))
+
+#check if these columns are -1, if so, replace with NA for later transformation
+train_data <- train_data %>%
+  mutate_at(vars(GooglePlus, Facebook, LinkedIn), ~ ifelse(. == -1, NA, .))
+#compare pairs of vars
 train_data %>%
   select(-Title,-Headline,-Source,-PublishDate) %>%
   ggpairs()
 ```
+
+
+
 
 
 The only extremely high correlation is between GooglePlus and Facebook. This makes sense (along with the other highest correlations) because they would seem to correspond to some kind of underlying popularity for the news item itself. 
@@ -73,26 +86,26 @@ train_data <- train_data %>%
 ```{r}
 #testing out our new log transformed quantitiative variables
 ggplot(train_data, aes(x = log_Facebook)) +
-  geom_histogram(binwidth = 1, fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = .5, fill = "lightblue", color = "black", alpha = 0.7) +
   labs(title = "Distribution of Facebook score",
        x = "log_Facebook",
        y = "Frequency")
 
 ggplot(train_data, aes(x = log_GooglePlus)) +
-  geom_histogram(binwidth = 1, fill = "red", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = .5, fill = "red", color = "black", alpha = 0.7) +
   labs(title = "Distribution of log_GooglePlus score",
        x = "log_GooglePlus",
        y = "Frequency")
 
 ggplot(train_data, aes(x = log_LinkedIn)) +
-  geom_histogram(binwidth = 1, fill = "blue", color = "black", alpha = 0.7) +
+  geom_histogram(binwidth = .5, fill = "blue", color = "black", alpha = 0.7) +
   labs(title = "Distribution of log_LinkedIn score",
        x = "log_LinkedIn",
        y = "Frequency")
 ```
 
 
-These are better distributions, so we'll keep them. 
+These are better distributions, so we'll keep them. They seem to be bimodal though.
 
 Let's look at their box plots:
 
@@ -142,11 +155,107 @@ fit(SentimentHeadline ~ log_Facebook + log_GooglePlus + log_LinkedIn + Sentiment
 
 # model output
 tidy(mlr_mod_1)
+
+#Model two will take out Facebook, given its correlation with GooglePlus
+mlr_mod_2 <- lm_spec %>% 
+fit(SentimentHeadline ~ log_GooglePlus + log_LinkedIn + SentimentTitle, data = train_data)
+
+# model output
+tidy(mlr_mod_2)
+
+#model 3 will use just linkedin and sentiment title, trying something simpler
+mlr_mod_3 <- lm_spec %>% 
+fit(SentimentHeadline ~  log_LinkedIn + SentimentTitle, data = train_data)
+
+# model output
+tidy(mlr_mod_3)
+
+#model 4 will use just Facebook and SentimentTitle
+mlr_mod_4 <- lm_spec %>% 
+fit(SentimentHeadline ~  log_Facebook + SentimentTitle, data = train_data)
+
+# model output
+tidy(mlr_mod_4)
+
+#now let's try adding an interaction term between these
+mlr_mod_5 <- lm_spec %>% 
+fit(SentimentHeadline ~  log_Facebook + SentimentTitle + log_Facebook * SentimentTitle, data = train_data)
+
+# model output
+tidy(mlr_mod_5)
 ```
 
 
+```{r assess fit}
+glance(mlr_mod_1)
 
+glance(mlr_mod_2)
 
+glance(mlr_mod_3)
+
+glance(mlr_mod_4)
+
+glance(mlr_mod_5)
+
+#anova for all four models
+anova(
+  extract_fit_engine(mlr_mod_1)
+)
+
+anova(
+  extract_fit_engine(mlr_mod_2)
+)
+
+anova(
+  extract_fit_engine(mlr_mod_3)
+)
+
+anova(
+  extract_fit_engine(mlr_mod_4)
+)
+
+anova(
+  extract_fit_engine(mlr_mod_5)
+)
+
+```
+
+```{r check on test}
+#read in test data
+test_data <- read_csv("~/STA631/Activities/activity04-mini-competition/competition-files/data/comp_test_data.csv")
+
+#perform same cleaning and transformation as train data
+#check if these columns are 0, if so, replace with NA for later transformation
+test_data <- test_data %>%
+  mutate_at(vars(GooglePlus, Facebook, LinkedIn), ~ ifelse(. == 0, NA, .))
+
+#check if these columns are -1, if so, replace with NA for later transformation
+test_data <- test_data %>%
+  mutate_at(vars(GooglePlus, Facebook, LinkedIn), ~ ifelse(. == -1, NA, .))
+
+# add natural log transformation to test data
+test_data <- test_data %>%
+  mutate(log_Facebook =  log(Facebook), log_GooglePlus = log(GooglePlus), log_LinkedIn = log(LinkedIn))
+
+#calculate residuals for fit based on unseen test data
+test_aug <- augment(mlr_mod_5, new_data = test_data)
+test_aug
+```
+
+```{r plot residuals}
+#plot fitted residuals
+ggplot(data = test_aug, aes(x = .pred, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  xlab("Fitted values") +
+  ylab("Residuals")
+
+#plot distribution of residuals
+ggplot(data = test_aug, aes(x = .resid)) +
+  geom_histogram(binwidth = 0.1) +
+  xlab("Residuals")
+
+```
 
 
 
